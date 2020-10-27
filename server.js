@@ -149,5 +149,5 @@ app.listen(PORT, (err) => {
     console.error(err);
     return;
   }
-  console.log(`Wiki app is serving at http://localhost: ${PORT}`)
+  console.log(`Wiki app is serving at http://localhost:${PORT}`)
 });
