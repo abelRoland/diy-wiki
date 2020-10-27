@@ -6,12 +6,15 @@ const PAGE_STATE_LOADING = 'loading';
 const PAGE_STATE_OK = 'ok';
 const PAGE_STATE_ERROR = 'error';
 
-const NEW_PAGE_TEXT = '# Your New Page\n\nWrite whatever you like here.';
+const NEW_PAGE_TEXT = '# Your New Page\n\nWrite whatever you like here.\n\n\nPs.: Don\'t forget to add tags';
 
 export default class EditPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { pageState: PAGE_STATE_LOADING };
+    this.state = { 
+      pageState: PAGE_STATE_LOADING,
+      disable: true
+     };
     this._onChange = this._onChange.bind(this);
     this._onSave = this._onSave.bind(this);
   }
@@ -34,6 +37,12 @@ export default class EditPage extends React.Component {
 
   _onChange(body) {
     const html = renderMarkdown(body);
+    const tag = html.search("<a");
+    if (tag > 0) {
+      this.setState({disable: false});
+    } else {
+      this.setState({disable: true});
+    }
     this.setState({ body, html });
   }
 
@@ -76,7 +85,11 @@ export default class EditPage extends React.Component {
               <div className="editor__preview" dangerouslySetInnerHTML={{ __html: html }} />
             </div>
             <div className="page__actions">
-              <button className="btn" onClick={this._onSave}>
+              <button 
+              className="btn" 
+              disabled={this.state.disable}
+              title='Please insert a tag'
+              onClick={this._onSave}>
                 Save
               </button>
               or &nbsp; <Link to={`/wiki/${slug}`}>Cancel</Link>

@@ -108,6 +108,12 @@ main {
   background-color: var(--color-text);
 }
 
+.page__actions .btn:disabled {
+  color: #8c8c8c;
+  background-color: #ccc;
+  border: none;
+}
+
 /**** EDITOR ****/
 
 .editor {
