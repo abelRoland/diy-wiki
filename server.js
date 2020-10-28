@@ -91,16 +91,22 @@ app.get('/api/tags/all', async (req, res) => {
     // sends an array of all tag names in all files, without duplicates!
     const tagsNames = [];
     const pagesFetch = await readDir(DATA_DIR, 'utf8');
+    
     const listTags = pagesFetch.forEach(file => {
         const slugPath = slugToPath(file.replace('.md', '').toLowerCase());
         const fileContent = fs.readFileSync(slugPath, 'utf-8');
+        // return early if file doesn't have tag, otherwise it generates an error
+        if (!fileContent.match(TAG_RE)) {
+            return;
+        };
         // tags are any word in all documents with a # in front of it
         // hint: use the TAG_RE regular expression to search the contents of each file
         const tagList = fileContent.match(TAG_RE);
         tagList.forEach((item) => {
           if (!tagsNames.includes(item.replace('#', '')))
           tagsNames.push(item.replace('#', ''))
-        });     
+      });
+    
     });
     //  success response: {status:'ok', tags: ['tagName', 'otherTagName']}
     res.send({ status: 'ok', tags: tagsNames });
